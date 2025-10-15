@@ -11,7 +11,9 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "echo 'lint not configured yet'",
-    "test": "echo 'tests not implemented yet'"
+    "test": "echo 'tests not implemented yet'",
+    "migration:run": "typeorm -d src/data-source.ts migration:run",
+    "migration:revert": "typeorm -d src/data-source.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
