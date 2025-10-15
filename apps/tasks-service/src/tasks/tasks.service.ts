@@ -76,12 +76,12 @@ export class TasksService {
   }
 
   async addComment(taskId: string, dto: CreateCommentDto) {
-    await this.findById(taskId);
+    const task = await this.findById(taskId);
     const comment = this.commentsRepo.create({ taskId, authorId: dto.authorId, content: dto.content });
     const saved = await this.commentsRepo.save(comment);
     await this.historyRepo.save({ taskId, action: 'COMMENTED', actorId: dto.authorId, payload: { commentId: saved.id } });
     // emit task.comment.created
-    this.notifyClient.emit('task.comment.created', { taskId, commentId: saved.id }).subscribe();
+    this.notifyClient.emit('task.comment.created', { taskId, commentId: saved.id, assignees: task.assignees }).subscribe();
     return saved;
   }
 

@@ -3,6 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthProxyService } from './auth.proxy.service';
 import { JwtTokensDto, LoginDto, RefreshDto, RegisterDto } from './auth.dto';
 import { Public } from './public.decorator';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -11,6 +12,7 @@ export class AuthController {
 
   @Post('register')
   @Public()
+  @SkipThrottle()
   @ApiOperation({ summary: 'Cadastro de usuário' })
   @ApiOkResponse({ type: JwtTokensDto })
   async register(@Body() dto: RegisterDto): Promise<JwtTokensDto> {
@@ -20,6 +22,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @Public()
+  @SkipThrottle()
   @ApiOperation({ summary: 'Login do usuário' })
   @ApiOkResponse({ type: JwtTokensDto })
   async login(@Body() dto: LoginDto): Promise<JwtTokensDto> {
@@ -29,6 +32,7 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @Public()
+  @SkipThrottle()
   @ApiOperation({ summary: 'Renova o access token a partir do refresh token' })
   @ApiOkResponse({ type: JwtTokensDto })
   async refresh(@Body() dto: RefreshDto): Promise<JwtTokensDto> {
