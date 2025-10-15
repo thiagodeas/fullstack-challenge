@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Comment } from './comment.entity';
+import { TaskHistory } from './task-history.entity';
 
 export enum TaskPriority {
   LOW = 'LOW',
@@ -34,9 +36,19 @@ export class Task {
   @Column({ type: 'enum', enum: TaskStatus, default: TaskStatus.TODO })
   status!: TaskStatus;
 
+  // Array of user ids assigned to the task
+  @Column({ type: 'text', array: true, default: '{}' })
+  assignees!: string[];
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
+
+  @OneToMany(() => Comment, (c) => c.task)
+  comments!: Comment[];
+
+  @OneToMany(() => TaskHistory, (h) => h.task)
+  history!: TaskHistory[];
 }

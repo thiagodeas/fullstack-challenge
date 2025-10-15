@@ -2,6 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './tasks/task.entity';
+import { Comment } from './tasks/comment.entity';
+import { TaskHistory } from './tasks/task-history.entity';
+import { TasksController } from './tasks/tasks.controller';
+import { TasksService } from './tasks/tasks.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HealthHandler } from './health.handler';
 
 @Module({
@@ -19,8 +24,22 @@ import { HealthHandler } from './health.handler';
         synchronize: false
       })
     }),
-    TypeOrmModule.forFeature([Task])
+    TypeOrmModule.forFeature([Task, Comment, TaskHistory]),
+    ClientsModule.registerAsync([
+      {
+        name: 'NOTIFICATIONS_CLIENT',
+        useFactory: () => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [process.env.RABBITMQ_URL || 'amqp://admin:admin@localhost:5672'],
+            queue: process.env.RABBITMQ_NOTIFICATIONS_QUEUE || 'notifications_queue',
+            queueOptions: { durable: true }
+          }
+        })
+      }
+    ])
   ],
-  providers: [HealthHandler]
+  controllers: [TasksController],
+  providers: [HealthHandler, TasksService]
 })
 export class AppModule {}
