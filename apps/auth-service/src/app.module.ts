@@ -3,6 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { HealthHandler } from './health.handler';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,8 +22,15 @@ import { HealthHandler } from './health.handler';
         synchronize: false
       })
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_ACCESS_SECRET,
+        signOptions: { expiresIn: Number(process.env.JWT_ACCESS_TTL || 900) }
+      })
+    })
   ],
-  providers: [HealthHandler]
+  controllers: [AuthController],
+  providers: [HealthHandler, AuthService]
 })
 export class AppModule {}
