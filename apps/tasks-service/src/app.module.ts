@@ -21,7 +21,7 @@ import { HealthHandler } from './health.handler';
         password: process.env.DB_PASSWORD || 'password',
         database: process.env.DB_NAME || 'challenge_db',
         autoLoadEntities: true,
-        synchronize: false
+        synchronize: true
       })
     }),
     TypeOrmModule.forFeature([Task, Comment, TaskHistory]),

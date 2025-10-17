@@ -31,6 +31,9 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3001
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - RABBITMQ_AUTH_QUEUE=auth_queue
+      - RABBITMQ_TASKS_QUEUE=tasks_queue
     depends_on:
       db:
         condition: service_started
@@ -55,6 +58,17 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3002
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - RABBITMQ_AUTH_QUEUE=auth_queue
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=challenge_db
+      - JWT_ACCESS_SECRET=change_me_access
+      - JWT_REFRESH_SECRET=change_me_refresh
+      - JWT_ACCESS_TTL=900
+      - JWT_REFRESH_TTL=604800
     depends_on:
       db:
         condition: service_started
@@ -79,6 +93,14 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3003
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - RABBITMQ_TASKS_QUEUE=tasks_queue
+      - RABBITMQ_NOTIFICATIONS_QUEUE=notifications_queue
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=challenge_db
     depends_on:
       db:
         condition: service_started
@@ -103,6 +125,13 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3004
+      - RABBITMQ_URL=amqp://admin:admin@rabbitmq:5672
+      - RABBITMQ_NOTIFS_QUEUE=notifications_queue
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=challenge_db
     depends_on:
       db:
         condition: service_started
