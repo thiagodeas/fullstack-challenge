@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createRoute } from '@tanstack/react-router';
+import { Route as rootRoute } from './__root';
 
-export const Route = createFileRoute('/')({
+export const Route = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
   component: () => <div>Welcome to Jungle Gaming Challenge</div>
 });
