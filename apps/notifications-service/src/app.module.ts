@@ -22,6 +22,7 @@ import { RmqEventsHandler } from './rmq-events.handler';
     }),
     TypeOrmModule.forFeature([Notification])
   ],
-  providers: [NotificationsGateway, RmqEventsHandler]
+  controllers: [RmqEventsHandler],
+  providers: [NotificationsGateway]
 })
 export class AppModule {}
